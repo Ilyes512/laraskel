@@ -1,27 +1,48 @@
-## Laravel PHP Framework
+```
+    __                   _____ __        __
+   / /  ____ __________ / ___// /_____  / /
+  / /  / __ `/ ___/ __ `|__ \/ //_/ _ \/ / 
+ / /__/ /_/ / /  / /_/ /__/ / ,< /  __/ /  
+/_____|__,_/_/   \__,_/____/_/|_|\___/_/   
+A Laravel Skeleton for kick starting your Laravel Projects
+```
+## Installation (local)
+This will install the app by using a Vagrant box and installing dependencies like PHP v5.6, Composer, MariaDB and Redis within your Virtual Machine (Vagrant box).
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+#### On your host machine (WIN / OSX / LINIX)
+1. Clone this repository and navigate to the folder within your terminal of choice.
+2. Make sure you have the below (free) tools installed on your machine:
+	- [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
+	- [Vagrant](https://www.vagrantup.com/downloads.html)
+	- [Ansible](http://docs.ansible.com/ansible/intro_installation.html) \*
+3. Run the fallowing command to create a local VM: `$ vagrant up`.  
+   When run for the first time it takes around 15 to 20 minutes depending on your machine.
+4. After the install, you can ssh into the box by using: `$ vagrant ssh`.
+5. **Optional**: Add the fallowing line to your hosts file: `192.168.50.51 laraskel.dev`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+#### On your guest machine (vagrant)
+6. Move your ssh to: `$ cd /vagrant` (This is where you will find your files on the guest machine).
+7. Run `$ composer install` and `$ npm install`.
+8. Make sure there is a `.env`-file in the root of the application.
+   If you don't see one, use `$ cp .env.example .env` to duplicate it from `.env.example`.
+9. Run `$ php artisan key:generate` to generate a unique `APP_KEY` inside your `.env`-file.
+10. Migrate and seed your database with: `$ php artisan migrate --seed`.  
+   You can "refresh" your DB by running: `$ php artisan migrate:refresh --seed`.
+11. And finally run: `$ ./node_modules/.bin/gulp` to build static files (css/js).
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
 
-## Official Documentation
+\* Should be optional, but not yet tested.
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+## MariaDB
+You can connect to the database using the fallowing:
 
-## Contributing
+```
+Host:     192.168.50.51
+Username: laraskel
+Password: secret
+Database: laraskel
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+## License
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-### License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+(Soon to be added)

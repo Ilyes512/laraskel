@@ -1,0 +1,23 @@
+---
+base:
+  timezone: Europe/Amsterdam
+  locale: nl_NL.UTF-8
+  swap: true
+php:
+  ppa: php5-5.6
+  xdebug: true
+  max_file_upload: 100m
+  max_body_size: 106m
+nginx:
+  docroot: /vagrant/public
+  servername: laraskel.dev
+  env_name: local
+  log_folder: /var/log/nginx/default
+mariadb:
+  root_password: secret
+  database: laraskel
+  user: laraskel
+  password: secret
+nvm:
+  version: v0.29.0
+  node_version: '4.2.2'
