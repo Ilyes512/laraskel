@@ -32,9 +32,25 @@ class AppServiceProvider extends ServiceProvider
 
         // Load these packages only in a dev environment
         if ($this->app->environment($this->devEnvironments)) {
+
+            // Register laravel-debugbar if enabled (see
+            $this->registerDebugbar();
+
             // Github Source: https://github.com/barryvdh/laravel-ide-helper
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
     }
+
+    /**
+     * Registers the debugbar
+     *
+     * @return void
+     */
+    protected function registerDebugbar()
+    {
+        if ($this->app->config->get('laraskel.debug.debugbar')) {
+            // Github Source: https://github.com/barryvdh/laravel-debugbar
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 }
