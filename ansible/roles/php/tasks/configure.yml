@@ -1,8 +1,12 @@
 ---
-- stat: path=/etc/php5/fpm/php.ini
+- name: Checkout fpm/php.ini file
+  stat:
+    path: /etc/php/7.0/fpm/php.ini
   register: phpfpm
 
-- stat: path=/etc/php5/cli/php.ini
+- name: Checkout cli/php.ini file
+  stat:
+    path: /etc/php/7.0/cli/php.ini
   register: phpcli
 
 - include: php-fpm.yml

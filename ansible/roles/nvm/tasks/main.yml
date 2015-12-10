@@ -1,6 +1,9 @@
 ---
 - name: Install NVM dependencies
-  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 3600
   with_items:
     - git
     - curl
@@ -10,27 +13,30 @@
 - name: Install nvm
   sudo: yes
   sudo_user: vagrant
-  git: repo=https://github.com/creationix/nvm.git dest=~/.nvm version={{ nvm.version }}
+  git:
+    repo: https://github.com/creationix/nvm.git
+    dest: "~/.nvm"
+    version: "{{ nvm.version }}"
 
 - name: Source nvm in ~/.profile
   sudo: yes
   sudo_user: vagrant
-  lineinfile: >
-    dest=~/.profile
-    line="source ~/.nvm/nvm.sh"
-    create=yes
+  lineinfile:
+    dest: ~/.profile
+    line: source ~/.nvm/nvm.sh
+    create: yes
 
 - name: Install chosen node version
-  command: sudo -iu vagrant nvm install {{ nvm.node_version }}
+  command: "sudo -iu vagrant nvm install {{ nvm.node_version }}"
   register: nvm_install_result
   changed_when: "'is already installed.' not in nvm_install_result.stdout"
 
 - name: Check if chosen node version is the default node version
-  shell: sudo -iu vagrant nvm ls | grep -e 'default -> {{ nvm.node_version }}'
+  shell: "sudo -iu vagrant nvm ls | grep -e 'default -> {{ nvm.node_version }}'"
   register: nvm_check_default
   changed_when: False
   ignore_errors: True
 
 - name: Set default node version to the chosen node version
-  command: sudo -iu vagrant nvm alias default {{ nvm.node_version }}
+  command: "sudo -iu vagrant nvm alias default {{ nvm.node_version }}"
   when: nvm_check_default|failed

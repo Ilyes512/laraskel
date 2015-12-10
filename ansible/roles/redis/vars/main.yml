@@ -1,0 +1,6 @@
+---
+redis_server_dependencies:
+  - checkinstall
+  - build-essential
+  - git
+  - php7.0-dev

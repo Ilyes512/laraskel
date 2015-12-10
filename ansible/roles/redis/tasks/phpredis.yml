@@ -1,0 +1,94 @@
+---
+- name: Install Redis server dependencies
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items: redis_server_dependencies
+
+- name: Get php's extension dir
+  shell: "php-config --extension-dir"
+  register: php_extensions_folder
+
+- name: Check if redis.so already exist
+  stat:
+    path: "{{ php_extensions_folder.stdout }}/redis.so"
+  register: redis_extension
+
+- name: Create (checkout) folder
+  sudo: yes
+  file:
+    path: /var/lib/ansible/checkouts
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when: redis_extension.stat.exists == false
+
+- name: Checkout phpredis
+  sudo: yes
+  git:
+    repo: https://github.com/phpredis/phpredis.git
+    dest: /var/lib/ansible/checkouts/phpredis
+    version: "{{ redis.phpredis_version }}"
+  when: redis_extension.stat.exists == false
+
+- name: Prepare installing phpredis (phpize)
+  sudo: yes
+  shell: "phpize"
+  args:
+    chdir: /var/lib/ansible/checkouts/phpredis
+  when: redis_extension.stat.exists == false
+
+- name: Prepare installing phpredis (configure)
+  sudo: yes
+  shell: "./configure CFLAGS='-O3'"
+  args:
+    chdir: /var/lib/ansible/checkouts/phpredis
+  when: redis_extension.stat.exists == false
+
+- name: Install phpredis
+  sudo: yes
+  shell: "checkinstall --nodoc --pkgversion=1.0.0 --default make clean install"
+  args:
+    chdir: /var/lib/ansible/checkouts/phpredis
+  when: redis_extension.stat.exists == false
+
+- name: Cleanup checkout directory
+  sudo: yes
+  shell: "git reset --hard && git clean -d -x -f"
+  args:
+    chdir: /var/lib/ansible/checkouts/phpredis
+  when: redis_extension.stat.exists == false
+
+- name: Fix redis.so mode
+  sudo: yes
+  file:
+    path: "{{ php_extensions_folder.stdout }}/redis.so"
+    state: file
+    mode: 0644
+  when: redis_extension.stat.exists == false  
+
+- name: Add redis.ini to mods-available
+  sudo: yes
+  template:
+    src: redis.tpl
+    dest: /etc/php/mods-available/redis.ini
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Activate redis.so for php7.0-fpm
+  file:
+    state: link
+    path: /etc/php/7.0/fpm/conf.d/redis.ini
+    src: /etc/php/mods-available/redis.ini
+  notify: restart php7.0-fpm
+
+- name: Activate redis.so for php7.0-cli
+  file:
+    state: link
+    path: /etc/php/7.0/cli/conf.d/redis.ini
+    src: /etc/php/mods-available/redis.ini
+  notify: restart php7.0-fpm

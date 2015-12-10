@@ -4,10 +4,12 @@ base:
   locale: nl_NL.UTF-8
   swap: true
 php:
-  ppa: php5-5.6
-  xdebug: true
+  ppa: php-7.0
+  xdebug: false # Not yet available for php7.0
   max_file_upload: 100m
   max_body_size: 106m
+redis:
+  phpredis_version: php7
 nginx:
   docroot: /vagrant/public
   servername: laraskel.dev
@@ -20,4 +22,4 @@ mariadb:
   password: secret
 nvm:
   version: v0.29.0
-  node_version: '4.2.2'
+  node_version: '5.1.1'
