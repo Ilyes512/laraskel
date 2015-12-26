@@ -1,39 +1,44 @@
 ---
-- name: Add ppa Repository
+- name: PHP | Add ppa Repository
   sudo: yes
   apt_repository:
     repo: "ppa:ondrej/{{ php.ppa }}"
-
-- name: Update apt
-  sudo: yes
-  apt:
     update_cache: yes
+    state: present
 
-- name: Install php7-fpm
+- name: PHP | Install php7-fpm
   sudo: yes
   apt:
     pkg: php7.0-fpm
-    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
 
-- name: Install php7-cli
+- name: PHP | Install php7-cli
   sudo: yes
   apt:
     pkg: php7.0-cli
-    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
 
-- name: Install PHP Packages
+- name: PHP | Install PHP Packages
   sudo: yes
   apt:
     pkg: "{{ item }}"
-    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
   with_items: php_packages
   when: php_packages is defined
 
-- name: Install xDebug
+- name: PHP | Install xDebug
   sudo: yes
   apt: 
     pkg: php7.0-xdebug
-    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
   when: php.xdebug
 
 - include: configure.yml

@@ -1,5 +1,5 @@
 ---
-- name: Install NVM dependencies
+- name: NVM | Install NVM dependencies
   apt:
     pkg: "{{ item }}"
     update_cache: yes
@@ -10,33 +10,34 @@
     - build-essential
     - libssl-dev
 
-- name: Install nvm
+- name: NVM | Install nvm
   sudo: yes
   sudo_user: vagrant
   git:
     repo: https://github.com/creationix/nvm.git
-    dest: "~/.nvm"
+    dest: ~/.nvm
     version: "{{ nvm.version }}"
 
-- name: Source nvm in ~/.profile
+- name: NVM | Source nvm in ~/.profile
   sudo: yes
   sudo_user: vagrant
   lineinfile:
     dest: ~/.profile
     line: source ~/.nvm/nvm.sh
     create: yes
+    state: present
 
-- name: Install chosen node version
+- name: NVM | Install chosen node version
   command: "sudo -iu vagrant nvm install {{ nvm.node_version }}"
   register: nvm_install_result
   changed_when: "'is already installed.' not in nvm_install_result.stdout"
 
-- name: Check if chosen node version is the default node version
+- name: NVM | Check if chosen node version is the default node version
   shell: "sudo -iu vagrant nvm ls | grep -e 'default -> {{ nvm.node_version }}'"
   register: nvm_check_default
   changed_when: False
   ignore_errors: True
 
-- name: Set default node version to the chosen node version
+- name: NVM | Set default node version to the chosen node version
   command: "sudo -iu vagrant nvm alias default {{ nvm.node_version }}"
   when: nvm_check_default|failed

@@ -1,29 +1,27 @@
 ---
-- name: Add PPA ppa:nginx/stable Repository
+- name: Nginx | Add PPA nginx/stable
   sudo: yes
   apt_repository:
     repo: ppa:nginx/stable
+    update_cache: yes
     state: present
 
-- name: Update apt
-  sudo: yes
-  apt:
-    update_cache: yes
-
-- name: Install Nginx
+- name: Nginx | Install Nginx
   sudo: yes
   apt:
     pkg: nginx
-    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
 
-- name: Change default nginx site
+- name: Nginx | Change default Nginx site
   sudo: yes
   template:
     src: default_nginx.tpl
     dest: /etc/nginx/sites-available/default
   notify: restart nginx
 
-- name: Create the log folder
+- name: Nginx | Create the log folder
   sudo: yes
   file:
     path: "{{ nginx.log_folder }}"
@@ -31,7 +29,7 @@
     group: adm
     state: directory
 
-- name: Create the access.log
+- name: Nginx | Create the access.log
   sudo: yes
   file:
     path: "{{ nginx.log_folder }}/access.log"
@@ -39,7 +37,7 @@
     group: adm
     state: touch
 
-- name: Create the error.log
+- name: Nginx | Create the error.log
   sudo: yes
   file:
     path: "{{ nginx.log_folder }}/error.log"

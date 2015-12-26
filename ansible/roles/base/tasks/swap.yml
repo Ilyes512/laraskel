@@ -2,35 +2,36 @@
 
 # todo Use a variable to force swap (re)creation
 
-- name: Create swap file
+- name: Swap | Create swap file
   command: "dd if=/dev/zero of={{ swap.file_path }} bs=1M count={{ swap.file_size_mb }}"
   args:
     creates: "{{ swap.file_path }}"
   tags:
     - swap.file.create
 
-- name: Change swap file permissions
+- name: Swap | Change swap file permissions
   file:
     path: "{{ swap.file_path }}"
     owner: root
     group: root
     mode: 0600
+    state: file
   tags:
     - swap.file.permissions
 
-- name: Check swap file type
+- name: Swap | Check swap file type
   command: "file {{ swap.file_path }}"
   register: swapfile
   tags:
     - swap.file.mkswap
 
-- name: Make swap file
+- name: Swap | Make swap file
   command: "sudo mkswap {{ swap.file_path }}"
   when: swapfile.stdout.find('swap file') == -1
   tags:
     - swap.file.mkswap
 
-- name: Write swap entry in fstab
+- name: Swap | Write swap entry in fstab
   mount:
     name: none
     src: "{{ swap.file_path }}"
@@ -42,7 +43,7 @@
   tags:
     - swap.fstab
 
-- name: Mount swap
+- name: Swap | Mount swap
   command: "swapon {{ swap.file_path }}"
   when: ansible_swaptotal_mb < 1
   tags:

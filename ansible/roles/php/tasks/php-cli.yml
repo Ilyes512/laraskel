@@ -1,6 +1,7 @@
 ---
-- name: Ensure timezone is set in cli php.ini
+- name: PHP | Ensure timezone is set in cli php.ini
   lineinfile:
     dest: "{{ php_ini.cli }}"
     regexp: "^;?date.timezone"
     line: "date.timezone = {{ base.timezone }}"
+    state: present

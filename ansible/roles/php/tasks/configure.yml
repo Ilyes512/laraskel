@@ -1,10 +1,10 @@
 ---
-- name: Checkout fpm/php.ini file
+- name: PHP | Checkout fpm/php.ini file
   stat:
     path: /etc/php/7.0/fpm/php.ini
   register: phpfpm
 
-- name: Checkout cli/php.ini file
+- name: PHP | Checkout cli/php.ini file
   stat:
     path: /etc/php/7.0/cli/php.ini
   register: phpcli

@@ -3,6 +3,7 @@ base:
   timezone: Europe/Amsterdam
   locale: nl_NL.UTF-8
   swap: true
+  cachefilesd: true
 php:
   ppa: php-7.0
   xdebug: false # Not yet available for php7.0

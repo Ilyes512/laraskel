@@ -1,18 +1,17 @@
 ---
-- name: Add Redis ppa Repository
+- name: Redis | Add PPA rwky/redis
   sudo: yes
   apt_repository:
     repo: ppa:rwky/redis
-
-- name: Update apt
-  sudo: yes
-  apt:
     update_cache: yes
+    state: present
 
-- name: Install Redis
+- name: Redis | Install Redis
   sudo: yes
   apt:
     pkg: redis-server
+    update_cache: yes
+    cache_valid_time: 3600
     state: latest
   notify: restart redis
 
